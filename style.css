@@ -1,0 +1,305 @@
+/* ===== Grundfarben & Variablen =====
+   Wenn du später Farben ändern willst, reicht es, sie hier anzupassen. */
+:root {
+  --bg: #0b0f14;
+  --surface: #141b24;
+  --surface-hover: #1b2430;
+  --border: #232d3a;
+  --text: #e8ecef;
+  --text-muted: #7c8894;
+  --accent-good: #7cff6b;   /* Lime-Grün für "gute" Gewohnheiten */
+  --accent-good-dim: #1c2e18;
+  --accent-bad: #ff5d5d;    /* Rot für "schlechte" Gewohnheiten, die man loswerden will */
+  --accent-bad-dim: #2e1818;
+  --radius: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding-bottom: 96px; /* Platz für den Add-Button unten */
+}
+
+/* ===== Header ===== */
+.app-header {
+  padding: 28px 20px 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+.brand-in {
+  color: var(--accent-good);
+  font-weight: 600;
+}
+
+.today {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== Filter-Tabs ===== */
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 16px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: var(--bg);
+  background: var(--accent-good);
+  border-color: var(--accent-good);
+  font-weight: 600;
+}
+
+/* ===== Habit-Liste ===== */
+.habit-list {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.habit-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.habit-card.done {
+  background: var(--surface-hover);
+}
+
+/* Der runde Check-Button links auf jeder Karte */
+.check-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: transparent;
+  color: transparent;
+  font-size: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.habit-card[data-type="good"] .check-btn.checked {
+  background: var(--accent-good);
+  border-color: var(--accent-good);
+  color: var(--bg);
+}
+
+.habit-card[data-type="bad"] .check-btn.checked {
+  background: var(--accent-bad);
+  border-color: var(--accent-bad);
+  color: var(--bg);
+}
+
+/* Kurzer "Pop"-Effekt beim Abhaken */
+.check-btn.pop {
+  animation: pop 0.25s ease;
+}
+@keyframes pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+.habit-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.habit-name {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.habit-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.streak {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 20px;
+  font-weight: 600;
+  min-width: 40px;
+  text-align: right;
+}
+
+.habit-card[data-type="good"] .streak { color: var(--accent-good); }
+.habit-card[data-type="bad"] .streak { color: var(--accent-bad); }
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+/* ===== Leerer Zustand ===== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+.empty-title { color: var(--text); font-size: 16px; margin-bottom: 6px; }
+.empty-sub { font-size: 13px; margin: 0; }
+
+/* ===== Floating Add-Button ===== */
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent-good);
+  color: var(--bg);
+  font-size: 28px;
+  line-height: 56px;
+  box-shadow: 0 6px 20px rgba(124, 255, 107, 0.35);
+  cursor: pointer;
+}
+
+/* ===== Modal (Formular) ===== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 10;
+}
+.modal-backdrop.open {
+  display: flex;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  width: 100%;
+  max-width: 480px;
+  padding: 24px 20px 28px;
+}
+
+.modal h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
+
+.modal label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.modal input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  margin-bottom: 18px;
+}
+
+.type-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.type-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.type-btn[data-type="good"].active {
+  background: var(--accent-good-dim);
+  border-color: var(--accent-good);
+  color: var(--accent-good);
+}
+.type-btn[data-type="bad"].active {
+  background: var(--accent-bad-dim);
+  border-color: var(--accent-bad);
+  color: var(--accent-bad);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-primary, .btn-secondary {
+  flex: 1;
+  padding: 13px 0;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--accent-good);
+  color: var(--bg);
+}
+
+.btn-secondary {
+  background: var(--surface-hover);
+  color: var(--text);
+}

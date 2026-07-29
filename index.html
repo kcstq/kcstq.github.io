@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Wichtig für Handy-Ansicht: verhindert Zoomen und sorgt für App-typisches Layout -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0B0F14" />
+
+  <!-- Das hier macht die App "installierbar" auf dem Handy -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <title>LockedIn</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Kopfbereich: Name der App + heutiges Datum -->
+  <header class="app-header">
+    <div class="brand">
+      <h1>Locked<span class="brand-in">In</span></h1>
+    </div>
+    <p class="today" id="todayLabel"></p>
+  </header>
+
+  <!-- Umschalter: alle / gute / schlechte Gewohnheiten anzeigen -->
+  <nav class="filter-tabs" id="filterTabs">
+    <button class="tab active" data-filter="all">Alle</button>
+    <button class="tab" data-filter="good">Aufbauen</button>
+    <button class="tab" data-filter="bad">Abgewöhnen</button>
+  </nav>
+
+  <!-- Hier werden die Habit-Karten per JavaScript eingefügt -->
+  <main id="habitList" class="habit-list">
+    <!-- Leerer Zustand, wird von JS ein-/ausgeblendet -->
+    <div class="empty-state" id="emptyState">
+      <p class="empty-title">Noch nichts eingesperrt.</p>
+      <p class="empty-sub">Leg deine erste Gewohnheit an und starte deinen Streak.</p>
+    </div>
+  </main>
+
+  <!-- Button zum Hinzufügen einer neuen Gewohnheit -->
+  <button class="fab" id="addBtn" aria-label="Neue Gewohnheit hinzufügen">+</button>
+
+  <!-- Formular (Modal), das beim Klick auf + erscheint -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <form class="modal" id="habitForm">
+      <h2>Neue Gewohnheit</h2>
+
+      <label for="habitName">Name</label>
+      <input type="text" id="habitName" placeholder="z. B. 10 Min. lesen" required maxlength="40" />
+
+      <label>Typ</label>
+      <div class="type-toggle">
+        <button type="button" class="type-btn active" data-type="good">Aufbauen (gut)</button>
+        <button type="button" class="type-btn" data-type="bad">Abgewöhnen (schlecht)</button>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="cancelBtn">Abbrechen</button>
+        <button type="submit" class="btn-primary">Speichern</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
