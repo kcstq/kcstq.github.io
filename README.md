@@ -1,3 +1,4 @@
+
 # LockedIn – Anleitung zum Testen
 
 ## Am PC im Browser testen
@@ -41,3 +42,5 @@ Browser-Leiste, und merkt sich deine Gewohnheiten auch offline.
 - Statistik-Seite (z. B. Erfolgsquote pro Woche)
 - Eigene Icons pro Gewohnheit
 - Später: Cloud-Speicherung mit Login, falls mehrere Geräte gewünscht sind
+
+
