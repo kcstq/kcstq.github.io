@@ -16,55 +16,70 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="auth-screen" id="authScreen">
+    <div class="auth-box">
+      <h1><span class="brand-lock">🔒</span> Locked<span class="brand-in">In</span></h1>
+      <p class="auth-sub">Melde dich an, um deine Gewohnheiten zu tracken.</p>
 
-  <!-- Kopfbereich: Name der App + heutiges Datum -->
-  <header class="app-header">
-    <div class="brand">
-      <h1>Locked<span class="brand-in">In</span></h1>
+      <input type="email" id="authEmail" placeholder="E-Mail" required />
+      <input type="password" id="authPassword" placeholder="Passwort" required />
+
+      <button class="btn-primary" id="loginBtn">Anmelden</button>
+      <button class="btn-secondary" id="registerBtn">Neu registrieren</button>
+
+      <p class="auth-error" id="authError"></p>
     </div>
-    <p class="today" id="todayLabel"></p>
-  </header>
-
-  <!-- Umschalter: alle / gute / schlechte Gewohnheiten anzeigen -->
-  <nav class="filter-tabs" id="filterTabs">
-    <button class="tab active" data-filter="all">Alle</button>
-    <button class="tab" data-filter="good">Aufbauen</button>
-    <button class="tab" data-filter="bad">Abgewöhnen</button>
-  </nav>
-
-  <!-- Hier werden die Habit-Karten per JavaScript eingefügt -->
-  <main id="habitList" class="habit-list">
-    <!-- Leerer Zustand, wird von JS ein-/ausgeblendet -->
-    <div class="empty-state" id="emptyState">
-      <p class="empty-title">Noch nichts eingesperrt.</p>
-      <p class="empty-sub">Leg deine erste Gewohnheit an und starte deinen Streak.</p>
-    </div>
-  </main>
-
-  <!-- Button zum Hinzufügen einer neuen Gewohnheit -->
-  <button class="fab" id="addBtn" aria-label="Neue Gewohnheit hinzufügen">+</button>
-
-  <!-- Formular (Modal), das beim Klick auf + erscheint -->
-  <div class="modal-backdrop" id="modalBackdrop">
-    <form class="modal" id="habitForm">
-      <h2>Neue Gewohnheit</h2>
-
-      <label for="habitName">Name</label>
-      <input type="text" id="habitName" placeholder="z. B. 10 Min. lesen" required maxlength="40" />
-
-      <label>Typ</label>
-      <div class="type-toggle">
-        <button type="button" class="type-btn active" data-type="good">Aufbauen (gut)</button>
-        <button type="button" class="type-btn" data-type="bad">Abgewöhnen (schlecht)</button>
-      </div>
-
-      <div class="modal-actions">
-        <button type="button" class="btn-secondary" id="cancelBtn">Abbrechen</button>
-        <button type="submit" class="btn-primary">Speichern</button>
-      </div>
-    </form>
   </div>
 
-  <script src="app.js"></script>
+  <!-- Kopfbereich: Name der App + heutiges Datum -->
+  <div class="app-content" id="appContent" style="display:none;">
+    <header class="app-header">
+      <div class="brand">
+        <h1>Locked<span class="brand-in">In</span></h1>
+      </div>
+      <p class="today" id="todayLabel"></p>
+    </header>
+
+    <!-- Umschalter: alle / gute / schlechte Gewohnheiten anzeigen -->
+    <nav class="filter-tabs" id="filterTabs">
+      <button class="tab active" data-filter="all">Alle</button>
+      <button class="tab" data-filter="good">Aufbauen</button>
+      <button class="tab" data-filter="bad">Abgewöhnen</button>
+    </nav>
+
+    <!-- Hier werden die Habit-Karten per JavaScript eingefügt -->
+    <main id="habitList" class="habit-list">
+      <!-- Leerer Zustand, wird von JS ein-/ausgeblendet -->
+      <div class="empty-state" id="emptyState">
+        <p class="empty-title">Noch nichts eingesperrt.</p>
+        <p class="empty-sub">Leg deine erste Gewohnheit an und starte deinen Streak.</p>
+      </div>
+    </main>
+
+    <!-- Button zum Hinzufügen einer neuen Gewohnheit -->
+    <button class="fab" id="addBtn" aria-label="Neue Gewohnheit hinzufügen">+</button>
+
+    <!-- Formular (Modal), das beim Klick auf + erscheint -->
+    <div class="modal-backdrop" id="modalBackdrop">
+      <form class="modal" id="habitForm">
+        <h2>Neue Gewohnheit</h2>
+
+        <label for="habitName">Name</label>
+        <input type="text" id="habitName" placeholder="z. B. 10 Min. lesen" required maxlength="40" />
+
+        <label>Typ</label>
+        <div class="type-toggle">
+          <button type="button" class="type-btn active" data-type="good">Aufbauen (gut)</button>
+          <button type="button" class="type-btn" data-type="bad">Abgewöhnen (schlecht)</button>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="cancelBtn">Abbrechen</button>
+          <button type="submit" class="btn-primary">Speichern</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

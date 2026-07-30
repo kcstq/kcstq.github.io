@@ -5,6 +5,13 @@
    Schritt nachvollziehen kannst.
    ========================================================= */
 
+import { auth } from "./firebase-init.js";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
 // ---------- 1. Hilfsfunktionen für Datum ----------
 // Wir arbeiten immer mit dem Format "YYYY-MM-DD", weil man
 // solche Strings einfach vergleichen und sortieren kann.
@@ -227,3 +234,45 @@ if ("serviceWorker" in navigator) {
 
 // ---------- 10. Erstes Rendern beim Laden der Seite ----------
 render();
+
+// ---------- 11. Login / Registrierung ----------
+const authScreen = document.getElementById("authScreen");
+const appContent = document.getElementById("appContent");
+const authError = document.getElementById("authError");
+
+function showError(message) {
+  authError.textContent = message;
+}
+
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    showError("Anmeldung fehlgeschlagen: " + err.message);
+  }
+});
+
+document.getElementById("registerBtn").addEventListener("click", async () => {
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    showError("Registrierung fehlgeschlagen: " + err.message);
+  }
+});
+
+// Reagiert automatisch, sobald sich der Login-Status ändert
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    authScreen.style.display = "none";
+    appContent.style.display = "block";
+  } else {
+    authScreen.style.display = "flex";
+    appContent.style.display = "none";
+  }
+});
