@@ -4,6 +4,12 @@
    Alles ist bewusst ausführlich kommentiert, damit du jeden
    Schritt nachvollziehen kannst.
    ========================================================= */
+import { db } from "./firebase-init.js";
+import {
+  doc,
+  getDoc,
+  setDoc,
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 import { auth } from "./firebase-init.js";
 import {
@@ -30,15 +36,16 @@ function previousDayKey(dateKey) {
 // ---------- 2. Daten laden & speichern ----------
 // localStorage kann nur Text speichern, deshalb wandeln wir
 // unsere Daten mit JSON.stringify / JSON.parse um.
-const STORAGE_KEY = "lockedin_habits";
+let currentUserId = null;
 
-function loadHabits() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  return raw ? JSON.parse(raw) : [];
+async function loadHabits(uid) {
+  const snap = await getDoc(doc(db, "habits", uid));
+  return snap.exists() ? snap.data().list : [];
 }
 
-function saveHabits(habits) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(habits));
+async function saveHabits(habitsToSave) {
+  if (!currentUserId) return;
+  await setDoc(doc(db, "habits", currentUserId), { list: habitsToSave });
 }
 
 // Jede Gewohnheit sieht so aus:
@@ -49,7 +56,7 @@ function saveHabits(habits) {
 //   history: ["2026-07-27", "2026-07-28"]   // Liste erledigter Tage
 // }
 
-let habits = loadHabits();
+let habits = [];
 let currentFilter = "all";
 
 // ---------- 3. Streak berechnen ----------
@@ -134,7 +141,7 @@ function escapeHtml(str) {
 }
 
 // ---------- 5. Aktionen ----------
-function toggleToday(id) {
+async function toggleToday(id) {
   const habit = habits.find((h) => h.id === id);
   const key = todayKey();
   const index = habit.history.indexOf(key);
@@ -145,24 +152,24 @@ function toggleToday(id) {
     habit.history.splice(index, 1);
   }
 
-  saveHabits(habits);
+  await saveHabits(habits);
   render();
 }
 
-function deleteHabit(id) {
+async function deleteHabit(id) {
   habits = habits.filter((h) => h.id !== id);
-  saveHabits(habits);
+  await saveHabits(habits);
   render();
 }
 
-function addHabit(name, type) {
+async function addHabit(name, type) {
   habits.push({
     id: crypto.randomUUID(),
     name,
     type,
     history: [],
   });
-  saveHabits(habits);
+  await saveHabits(habits);
   render();
 }
 
@@ -267,11 +274,17 @@ document.getElementById("registerBtn").addEventListener("click", async () => {
 });
 
 // Reagiert automatisch, sobald sich der Login-Status ändert
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (user) {
+    currentUserId = user.uid;
     authScreen.style.display = "none";
     appContent.style.display = "block";
+
+    habits = await loadHabits(currentUserId);
+    render();
   } else {
+    currentUserId = null;
+    habits = [];
     authScreen.style.display = "flex";
     appContent.style.display = "none";
   }
