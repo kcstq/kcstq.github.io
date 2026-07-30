@@ -30,8 +30,9 @@ body {
 /* ===== Header ===== */
 .app-header {
   padding: 28px 20px 16px;
-}
+  position: relative;
 
+}
 .brand {
   display: flex;
   align-items: center;
@@ -351,4 +352,17 @@ body {
   font-size: 13px;
   min-height: 18px;
   margin-top: 8px;
+}
+
+.logout-btn {
+  position: absolute;
+  top: 28px;
+  right: 20px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
 }

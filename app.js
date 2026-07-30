@@ -15,6 +15,7 @@ import { auth } from "./firebase-init.js";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
@@ -271,6 +272,10 @@ document.getElementById("registerBtn").addEventListener("click", async () => {
   } catch (err) {
     showError("Registrierung fehlgeschlagen: " + err.message);
   }
+});
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await signOut(auth);
 });
 
 // Reagiert automatisch, sobald sich der Login-Status ändert
