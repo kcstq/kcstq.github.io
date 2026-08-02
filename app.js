@@ -281,7 +281,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
-    showError("Anmeldung fehlgeschlagen: " + err.message);
+    showError("Anmeldung fehlgeschlagen");
   }
 });
 
@@ -295,7 +295,7 @@ document.getElementById("registerBtn").addEventListener("click", async () => {
     // onAuthStateChanged erkennt gleich, dass noch kein Username existiert,
     // und zeigt automatisch Ansicht 3 (Username festlegen) an.
   } catch (err) {
-    showError("Registrierung fehlgeschlagen: " + err.message);
+    showError("Registrierung fehlgeschlagen");
   }
 });
 
