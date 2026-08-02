@@ -259,7 +259,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
-    showError("Anmeldung fehlgeschlagen: " + err.message);
+    showError("Anmeldung fehlgeschlagen");
   }
 });
 
@@ -270,7 +270,7 @@ document.getElementById("registerBtn").addEventListener("click", async () => {
   try {
     await createUserWithEmailAndPassword(auth, email, password);
   } catch (err) {
-    showError("Registrierung fehlgeschlagen: " + err.message);
+    showError("Registrierung fehlgeschlagen");
   }
 });
 
