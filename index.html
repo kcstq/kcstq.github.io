@@ -21,13 +21,29 @@
       <h1>Locked<span class="brand-in">In</span></h1>
       <p class="auth-sub">Melde dich an, um deine Gewohnheiten zu tracken.</p>
 
-      <input type="email" id="authEmail" placeholder="E-Mail" required />
-      <input type="password" id="authPassword" placeholder="Passwort" required />
-
+          <!-- Ansicht 1: Login -->
+    <div id="loginView">
+      <input type="text" id="loginIdentifier" placeholder="Username oder E-Mail" />
+      <input type="password" id="loginPassword" placeholder="Passwort" />
       <button class="btn-primary" id="loginBtn">Anmelden</button>
-      <button class="btn-secondary" id="registerBtn">Neu registrieren</button>
+      <button class="btn-secondary" id="showRegisterBtn">Neu registrieren</button>
+    </div>
 
-      <p class="auth-error" id="authError"></p>
+    <!-- Ansicht 2: Registrierung (E-Mail + Passwort) -->
+    <div id="registerView" style="display:none;">
+      <input type="email" id="registerEmail" placeholder="E-Mail" />
+      <input type="password" id="registerPassword" placeholder="Passwort" />
+      <button class="btn-primary" id="registerBtn">Weiter</button>
+      <button class="btn-secondary" id="showLoginBtn">Zurück zur Anmeldung</button>
+    </div>
+
+    <!-- Ansicht 3: Username festlegen (nach erfolgreicher Registrierung) -->
+    <div id="usernameView" style="display:none;">
+      <input type="text" id="newUsername" placeholder="Wie möchtest du genannt werden?" />
+      <button class="btn-primary" id="saveUsernameBtn">Speichern</button>
+    </div>
+
+    <p class="auth-error" id="authError"></p>
     </div>
   </div>
 
@@ -37,8 +53,20 @@
       <div class="brand">
         <h1>Locked<span class="brand-in">In</span></h1>
       </div>
-      <p class="today" id="todayLabel"></p>
-      <button class="logout-btn" id="logoutBtn">Abmelden</button>
+        <p class="today" id="todayLabel"></p>
+      
+      <div class="profile-wrapper">
+          <button class="profile-btn" id="profileBtn">
+            <span id="profileInitial">?</span>
+          </button>
+
+        <div class="profile-dropdown" id="profileDropdown">
+          <button class="dropdown-item" id="profileMenuItem">Profil</button>
+          <button class="dropdown-item" id="settingsMenuItem">Einstellungen</button>
+          <button class="dropdown-item dropdown-item-danger" id="logoutMenuItem">Abmelden</button>
+        </div>
+      </div>
+
     </header>
 
     <!-- Umschalter: alle / gute / schlechte Gewohnheiten anzeigen -->

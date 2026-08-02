@@ -252,45 +252,135 @@ function showError(message) {
   authError.textContent = message;
 }
 
+function showView(view) {
+  document.getElementById("loginView").style.display = view === "login" ? "block" : "none";
+  document.getElementById("registerView").style.display = view === "register" ? "block" : "none";
+  document.getElementById("usernameView").style.display = view === "username" ? "block" : "none";
+  authError.textContent = "";
+}
+
+document.getElementById("showRegisterBtn").addEventListener("click", () => showView("register"));
+document.getElementById("showLoginBtn").addEventListener("click", () => showView("login"));
+
+// ---- Login (Username oder E-Mail) ----
 document.getElementById("loginBtn").addEventListener("click", async () => {
-  const email = document.getElementById("authEmail").value.trim();
-  const password = document.getElementById("authPassword").value;
+  const identifier = document.getElementById("loginIdentifier").value.trim();
+  const password = document.getElementById("loginPassword").value;
 
   try {
+    let email = identifier;
+
+    if (!identifier.includes("@")) {
+      const usernameSnap = await getDoc(doc(db, "usernames", identifier.toLowerCase()));
+      if (!usernameSnap.exists()) {
+        showError("Kein Nutzer mit diesem Username gefunden.");
+        return;
+      }
+      email = usernameSnap.data().email;
+    }
+
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
-    showError("Anmeldung fehlgeschlagen");
+    showError("Anmeldung fehlgeschlagen: " + err.message);
   }
 });
 
+// ---- Registrierung Schritt 1: E-Mail + Passwort ----
 document.getElementById("registerBtn").addEventListener("click", async () => {
-  const email = document.getElementById("authEmail").value.trim();
-  const password = document.getElementById("authPassword").value;
+  const email = document.getElementById("registerEmail").value.trim();
+  const password = document.getElementById("registerPassword").value;
 
   try {
     await createUserWithEmailAndPassword(auth, email, password);
+    // onAuthStateChanged erkennt gleich, dass noch kein Username existiert,
+    // und zeigt automatisch Ansicht 3 (Username festlegen) an.
   } catch (err) {
-    showError("Registrierung fehlgeschlagen");
+    showError("Registrierung fehlgeschlagen: " + err.message);
   }
 });
 
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-  await signOut(auth);
+// ---- Registrierung Schritt 2: Username festlegen ----
+document.getElementById("saveUsernameBtn").addEventListener("click", async () => {
+  const username = document.getElementById("newUsername").value.trim();
+
+  if (!username) {
+    showError("Bitte gib einen Username an.");
+    return;
+  }
+
+  const user = auth.currentUser;
+  const usernameKey = username.toLowerCase();
+
+  const existing = await getDoc(doc(db, "usernames", usernameKey));
+  if (existing.exists()) {
+    showError("Dieser Username ist schon vergeben.");
+    return;
+  }
+
+  await setDoc(doc(db, "users", user.uid), { username });
+  await setDoc(doc(db, "usernames", usernameKey), { email: user.email });
+
+  document.getElementById("profileInitial").textContent = username.charAt(0).toUpperCase();
+  authScreen.style.display = "none";
+  appContent.style.display = "block";
+  habits = await loadHabits(user.uid);
+  render();
 });
 
 // Reagiert automatisch, sobald sich der Login-Status ändert
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUserId = user.uid;
-    authScreen.style.display = "none";
-    appContent.style.display = "block";
+    const userSnap = await getDoc(doc(db, "users", currentUserId));
 
-    habits = await loadHabits(currentUserId);
-    render();
+    if (userSnap.exists() && userSnap.data().username) {
+      document.getElementById("profileInitial").textContent = userSnap
+        .data()
+        .username.charAt(0)
+        .toUpperCase();
+      authScreen.style.display = "none";
+      appContent.style.display = "block";
+      habits = await loadHabits(currentUserId);
+      render();
+    } else {
+      // Eingeloggt, aber noch kein Username vorhanden -> Ansicht 3 zeigen
+      authScreen.style.display = "flex";
+      appContent.style.display = "none";
+      showView("username");
+    }
   } else {
     currentUserId = null;
     habits = [];
     authScreen.style.display = "flex";
     appContent.style.display = "none";
+    showView("login");
   }
+});
+
+// ---------- 12. Profil-Dropdown ----------
+const profileBtn = document.getElementById("profileBtn");
+const profileDropdown = document.getElementById("profileDropdown");
+
+profileBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  profileDropdown.classList.toggle("open");
+});
+
+// Klick außerhalb schließt das Menü
+document.addEventListener("click", () => {
+  profileDropdown.classList.remove("open");
+});
+
+document.getElementById("logoutMenuItem").addEventListener("click", async () => {
+  await signOut(auth);
+});
+
+document.getElementById("profileMenuItem").addEventListener("click", () => {
+  profileDropdown.classList.remove("open");
+  alert("Profil-Seite kommt als Nächstes 👀");
+});
+
+document.getElementById("settingsMenuItem").addEventListener("click", () => {
+  profileDropdown.classList.remove("open");
+  alert("Einstellungen kommen bald 👀");
 });
